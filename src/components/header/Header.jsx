@@ -14,8 +14,10 @@ import {
     faPlane,
     faTaxi,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ type }) => {
+    const [destination, setDestination] = useState("");
     const [openDate, setOpenDate] = useState(false);
     const [date, setDate] = useState([
         {
@@ -31,6 +33,8 @@ const Header = ({ type }) => {
         room: 1,
     });
 
+    const navigate = useNavigate();
+
     const handleOption = (name, operation) => {
         setOptions((prev) => {
             return {
@@ -38,6 +42,10 @@ const Header = ({ type }) => {
                 [name]: operation === "i" ? options[name] + 1 : options[name] - 1,
             };
         });
+    };
+
+    const handleSearch = () => {
+        navigate("/hotels", { state: { destination, date, options } });
     };
 
     return (
@@ -87,6 +95,7 @@ const Header = ({ type }) => {
                                     type='text'
                                     placeholder='Where are you going'
                                     className={classes.headerSearchInput}
+                                    onChange={(e) => setDestination(e.target.value)}
                                 />
                             </div>
                             <div className={classes.headerSearchItem}>
@@ -109,6 +118,7 @@ const Header = ({ type }) => {
                                         moveRangeOnFirstSelection={false}
                                         ranges={date}
                                         className={classes.date}
+                                        minDate={new Date()}
                                     />
                                 )}
                             </div>
@@ -184,7 +194,9 @@ const Header = ({ type }) => {
                                 )}
                             </div>
                             <div className={classes.headerListItem}>
-                                <button className={classes.headerBtn}>Search</button>
+                                <button className={classes.headerBtn} onClick={handleSearch}>
+                                    Search
+                                </button>
                             </div>
                         </div>
                     </>
